@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Proof by Magic - Character Selection</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Caveat+Brush&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --sheet-max: 1100px;
+      --sheet-side: clamp(16px, 5vw, 48px);
+      --row-pad-y: clamp(20px, 4vh, 48px);
+      --gap: 2rem;
+    }
+
+    /* Prevent accidental horizontal overflow everywhere */
+    * { box-sizing: border-box; }
+    html, body { width: 100%; max-width: 100%; overflow-x: hidden; margin: 0; }
+
+    body {
+      font-family: 'Caveat Brush', cursive;
+      background-image: url('css-styles/media/image1.png');
+      background-position: center;
+      background-size: cover;
+      background-attachment: fixed;
+      padding: 5vh 0;
+      color: white;
+    }
+
+    .sheet {
+      width: min(100%, var(--sheet-max));
+      margin-inline: auto;
+      padding-inline: var(--sheet-side);
+    }
+
+    .logo {
+      width: min(40vw, 500px);
+      display: block;
+      margin: 0 auto 5vh auto;
+    }
+
+    .character {
+      border-bottom: 2px solid rgba(255,255,255,0.4);
+      padding: var(--row-pad-y) 0;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--gap);
+
+      /* key: allow wrapping to next line on narrow screens */
+      flex-wrap: wrap;
+    }
+
+    /* Image hover/press interactions (only on the image) */
+    .character img {
+      width: min(30vw, 220px);
+      max-width: 100%;
+      height: auto;
+      filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 1));
+      transition: transform 180ms ease, filter 180ms ease;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-drag: none;
+      outline: none;
+      border-radius: 8px;
+      flex: 0 0 auto; /* don't stretch the image */
+    }
+    .character img:hover,
+    .character img:focus {
+      transform: scale(1.06) translateY(-2px);
+      filter: drop-shadow(0 14px 14px rgba(0, 0, 0, 0.9));
+    }
+    .character img:active {
+      transform: scale(1.02) translateY(0);
+      transition-duration: 60ms;
+    }
+
+    .selectable:focus-visible {
+      box-shadow: 0 0 0 3px rgba(160,220,255,0.75), 0 0 18px rgba(160,220,255,0.7);
+    }
+
+    .char-info {
+      flex: 1 1 300px;   /* can grow, can shrink, preferred width */
+      min-width: 0;      /* key: allow text block to shrink instead of forcing overflow */
+      margin-left: 0.5rem;
+    }
+
+    /* Wrap long words and prevent horizontal overflow due to long strings */
+    .char-name,
+    .char-desc {
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      hyphens: auto;
+    }
+
+    /* Responsive typography */
+    .char-name {
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+      line-height: 1.05;
+      font-size: 7vh;
+    }
+
+    .char-desc {
+      margin-bottom: 0.25rem;
+      line-height: 1.15;
+      font-size: 4vh;
+    }
+
+    /* ==== Rune crystal text base ==== */
+    .rune-text {
+      position: relative;
+      background-image:
+        conic-gradient(from 20deg, #fff, #ddd 25%, #fff 35%, #ccc 55%, #fff 70%, #eee 90%, #fff),
+        radial-gradient(1px 1px at 15% 25%, rgba(255,255,255,0.3) 0 50%, transparent 51%),
+        radial-gradient(1px 1px at 65% 75%, rgba(255,255,255,0.25) 0 50%, transparent 51%),
+        linear-gradient(180deg, #fff 0%, #ccc 40%, #bbb 70%, #999 100%);
+      background-size: 200% 200%, 8px 8px, 10px 10px, 100% 100%;
+      background-blend-mode: screen, overlay, overlay, normal;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(20, 20, 20, 0.9);
+      animation: runeShimmer 8s linear infinite;
+    }
+    .rune-title {
+      font-weight: bold;
+      letter-spacing: 0.02em;
+      -webkit-text-stroke: 2px rgba(8, 30, 55, 0.95);
+    }
+    .rune-body {
+      opacity: 0.95;
+    }
+    @keyframes runeShimmer {
+      0%   { background-position: 0% 0%, 0 0, 0 0, 0 0; }
+      50%  { background-position: 100% 100%, 4px 6px, -3px -5px, 0 0; }
+      100% { background-position: 0% 0%, 0 0, 0 0, 0 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .rune-text { animation: none; }
+    }
+
+    /* ==== Character color variants ==== */
+    .gorit-text {
+      -webkit-text-stroke: 0.2vh rgba(0, 60, 20, 1);
+      text-shadow:
+        0 0 0px #b5ffb5,
+        0 0 5px #8fff8f,
+        0 0 5px #59ff59,
+        0 0 10px #00ff66,
+        0 0 1px #00ff99;
+    }
+    .adarassa-text {
+      -webkit-text-stroke: 0.2vh rgba(10, 40, 70, 1);
+      text-shadow:
+        0 0 0px #aee7ff,
+        0 0 5px #7fd7ff,
+        0 0 5px #59c9ff,
+        0 0 10px #19bfff,
+        0 0 1px #00aaff;
+    }
+    .nyaya-text {
+      -webkit-text-stroke: 0.2vh rgba(70, 30, 0, 1);
+      text-shadow:
+        0 0 0px #ffd6a5,
+        0 0 5px #ffb366,
+        0 0 5px #ff9933,
+        0 0 10px #ff8000,
+        0 0 1px #ff6600;
+    }
+    .zera-text {
+      -webkit-text-stroke: 0.2vh rgba(40, 0, 70, 1);
+      text-shadow:
+        0 0 0px #e5aaff,
+        0 0 5px #d580ff,
+        0 0 5px #c24dff,
+        0 0 10px #a600ff,
+        0 0 1px #8000ff;
+    }
+
+    /* Stack vertically on very small screens */
+    @media (max-width: 600px) {
+      .character {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      .char-info { margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <img src="css-styles/media/characters-logo.png" alt="Proof by Magic Logo" class="logo">
+
+    <div class="character" data-character="Logician">
+      <img src="css-styles/media/gorit-avatar(cuter).png" alt="Görit" class="selectable" tabindex="0" />
+      <div class="char-info">
+        <div class="char-name rune-text rune-title gorit-text">Görit</div>
+        <div class="char-desc rune-text rune-body gorit-text">Görit is an earthen sorcerer. He lives by
+        himself in a hut in the forest, and is an expert on tree-like structures</div>
+      </div>
+    </div>
+
+    <div class="character" data-character="Illusionist">
+      <img src="css-styles/media/adarassa-avatar3.png" alt="Adarassa" class="selectable" tabindex="0" />
+      <div class="char-info">
+        <div class="char-name rune-text rune-title adarassa-text">Adarassa</div>
+        <div class="char-desc rune-text rune-body adarassa-text">Adarassa is a water nymph. She has the ability to control
+        the movements of water, and has an incredible intuitive understanding of shapes and spaces</div>
+      </div>
+    </div>
+
+    <div class="character" data-character="Elementalist">
+      <img src="css-styles/media/nyaya-avatar.png" alt="Nyaya" class="selectable" tabindex="0" />
+      <div class="char-info">
+        <div class="char-name rune-text rune-title nyaya-text">Nyaya</div>
+        <div class="char-desc rune-text rune-body nyaya-text">Nyaya may be playful, but he is also a wise scholar of a school
+        of magic known as Logic. He has the ability to both create and destroy</div>
+      </div>
+    </div>
+
+    <div class="character" data-character="Sage" style="border-bottom:none; filter: drop-shadow(0 10px 10px rgba(20, 20, 20, 1))">
+      <img src="css-styles/media/zera-avatar.png" alt="Zera" class="selectable" tabindex="0" />
+      <div class="char-info">
+        <div class="char-name rune-text rune-title zera-text">Zera</div>
+        <div class="char-desc rune-text rune-body zera-text">Zera is a rogue enchantress. But instead of using her abilities
+        on other creatures, she enchants the realms of real and imaginary numbers to elicit their secretes</div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Make images clickable/selectable
+    document.querySelectorAll('.character').forEach(section => {
+      const img = section.querySelector('img.selectable');
+      const chosen = section.dataset.character;
+
+      const choose = () => {
+        localStorage.setItem('chosenCharacter', chosen);
+        location.href = 'Campaigns.html';
+      };
+
+      img.addEventListener('click', choose);
+
+      img.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          choose();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

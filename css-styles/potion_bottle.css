@@ -1,0 +1,129 @@
+/* Portable PBM potion bottle — AQUA style (vh-sized + glow + glass egg) */
+
+/* ---------- Base variables ---------- */
+.pbm-potion {
+  --potion-fill: 100%;
+  --glass-rim: rgba(205, 255, 253, 0.47);
+  --glass-inner-top: #00ccff;   /* used only over liquid */
+  --glass-inner-bot: #007faa;   /* used only over liquid */
+  --liquid-top: #00e0ff;
+  --liquid-bot: #0080aa;
+
+  /* NEW: viewport-tied sizing (slightly larger by default) */
+  --pbm-size: 10vh;
+  inline-size: var(--pbm-size);
+  block-size: var(--pbm-size);
+
+  position: relative;
+  margin: 1vh;
+  z-index: 1;
+
+  /* Bottle body (transparent interior) */
+  background: transparent;
+  border-radius: 50% 50% 45% 45% / 55% 55% 45% 45%;
+  border: 3px solid var(--glass-rim);
+  overflow: hidden;
+
+  /* NEW: very faint white inset to read as glass/egg + subtle outer glow */
+  box-shadow:
+    inset 0 0 28px rgba(255,255,255,.1),
+    inset 0 12px 32px rgba(255,255,255,.1),
+    inset 0 -8px 18px rgba(255,255,255,.1),
+    0 0 15px rgba(0,191,255,.18);
+  filter: drop-shadow(0 6px 8px rgba(0,0,0,1));
+}
+
+/* ---------- Glass tint that only appears over the liquid ----------
+   Height follows --potion-fill so transitions are smooth (no jumps). */
+.pbm-potion::before {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: var(--potion-fill, 0%);
+  border-radius: 0 0 50% 50% / 0 0 40% 40%;
+  pointer-events: none;
+  z-index: 0; /* BELOW liquid so liquid glow shows above */
+
+  /* Inner “glass” tint, visible only where there is liquid */
+  background:
+    linear-gradient(to top, rgba(255,255,255,.18), rgba(255,255,255,0) 18%),
+    radial-gradient(circle at 50% 60%,
+      var(--glass-inner-top) 30%,
+      var(--glass-inner-bot) 100%);
+  opacity: .55;
+
+  transition: height 250ms ease-out;
+  will-change: height;
+}
+
+/* ---------- Liquid (height driven by JS via --potion-fill) ---------- */
+.pbm-potion .liquid {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: var(--potion-fill, 60%);
+  background: linear-gradient(to top, var(--liquid-top), var(--liquid-bot));
+  border-radius: 0 0 50% 50% / 0 0 40% 40%;
+
+  /* NEW: subtle transparency so the glass tint reads through */
+  opacity: .92;
+
+  /* NEW: soft inner/outer glow to make the liquid feel luminous */
+  box-shadow:
+    inset 0 6px 18px rgba(255,255,255,.10),
+    0 0 22px rgba(0,224,255,.28),
+    0 0 44px rgba(0,128,170,.22);
+
+  /* gentle motion + smooth level change */
+  animation: pbm-slosh 3s ease-in-out infinite;
+  transition: height 250ms ease-out, opacity 200ms ease-out;
+  will-change: height;
+
+  z-index: 1; /* above tint, below bubbles */
+}
+
+@keyframes pbm-slosh {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+
+/* ---------- Bubbles ---------- */
+.pbm-potion .bubble {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  background: #c8f7ff;
+  border-radius: 50%;
+  opacity: 0;
+  animation: pbm-bubble-rise 4s infinite ease-in-out;
+  z-index: 2; /* above liquid & tint */
+}
+.pbm-potion .bubble.delay-1 { left: 30%; animation-delay: 1s; }
+.pbm-potion .bubble.delay-2 { left: 70%; animation-delay: 2s; }
+
+@keyframes pbm-bubble-rise {
+  0%   { transform: translateY(0) scale(0.4); opacity: 0; }
+  30%  { opacity: 1; }
+  100% { transform: translateY(-120px) scale(1); opacity: 0; }
+}
+
+/* ---------- Optional cap & label (unchanged) ---------- */
+.pbm-potion > .cap{
+  position:absolute; top:-6px; left:50%; transform:translateX(-50%);
+  width:60%; height:10px; border-radius:6px;
+  background: linear-gradient(#444,#222);
+  box-shadow: 0 2px 0 rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.12);
+}
+.pbm-potion > .lvl{
+  position:absolute; right:100%; top:50%; transform:translate(-8px,-50%);
+  font: 600 12px/1 "Nunito", system-ui, sans-serif; color:#ECEBFA; opacity:.75; text-shadow:0 1px 1px #000;
+}
+
+/* ---------- Small screens: keep your existing scale/anchor ---------- */
+@media (max-width: 720px) {
+  #parchment #potion_bottle {
+    transform: scale(.75);
+    transform-origin: top right;
+  }
+}

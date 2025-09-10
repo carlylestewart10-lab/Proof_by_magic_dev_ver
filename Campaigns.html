@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Proof by Magic - Campaign Map</title>
+  <link rel="stylesheet" href="css-styles/buttons.css"><!-- kept, but not used for nav -->
+  <style>
+    body {
+      background-image: url('css-styles/media/image1.png');
+      background-position: center;
+      background-size: cover;
+      margin: 0;
+      padding: 4vh 4vw;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      font-family: 'Merienda', cursive;
+      box-sizing: border-box;
+      gap: 3vh;
+    }
+
+    /* --- Top navigation ribbon (3 segments) --- */
+    .nav-ribbon {
+      align-self: stretch;            /* span the content width (inside body padding) */
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      position: sticky;               /* stays visible when scrolling */
+      top: 0;
+      z-index: 1000;
+      margin-bottom: 1.2rem;
+    }
+    .nav-ribbon a {
+      display: block;
+      text-align: center;
+      padding: 12px 16px;
+      background: #2f2f2f;           /* dark grey button */
+      color: #fff;
+      text-decoration: none;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 10px 14px rgba(0,0,0,0.30);
+      transition: transform .15s ease, background-color .15s ease, box-shadow .15s ease;
+      user-select: none;
+    }
+    .nav-ribbon a:hover {
+      background: #3a3a3a;
+      transform: translateY(-1px);
+      box-shadow: 0 12px 16px rgba(0,0,0,0.35);
+    }
+    .nav-ribbon a:active { transform: translateY(0); }
+    .nav-ribbon a:focus-visible {
+      outline: 2px dashed #fff;
+      outline-offset: 2px;
+    }
+
+    /* Smaller logo */
+    .logo {
+      position: relative;
+      width: 40vw;
+      max-width: 500px;
+      height: auto;
+      display: block;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.45));
+      left: -20px;
+    }
+
+    /* Island grid container */
+    .island-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3vh 3vw;
+      width: 80vw;
+      max-width: 900px;
+    }
+
+    /* Clickable island links wrap the images */
+    .island-link {
+      position: relative;
+      display: block;
+      outline: none;
+      border-radius: 12px;
+    }
+
+    /* Clickable island images */
+    .island {
+      width: 100%;
+      height: auto;
+      cursor: pointer;
+      transition: transform 0.25s ease, filter 0.25s ease, opacity 0.25s ease;
+      display: block;
+      filter: drop-shadow(0 14px 14px rgba(0, 0, 0, 1));
+      border-radius: 12px;
+    }
+
+    .island-link:not([aria-disabled="true"]):hover {
+      transform: scale(1.05);
+    }
+
+    /* Locked state (visual + non-interactive) */
+    .island-link[aria-disabled="true"] {
+      cursor: default;
+      pointer-events: auto; /* so we can catch the click to shake */
+    }
+    .island-link[aria-disabled="true"] .island {
+      opacity: 0.5;
+      filter: grayscale(0.35) drop-shadow(0 14px 14px rgba(0, 0, 0, 1));
+      cursor: default;
+    }
+
+    .island-avatar {
+      position: absolute;
+      --ax: 27;  /* x % */
+      --ay: 25;  /* y % */
+      --aw: 31;  /* width % */
+      --ar: 1 / 1.6;
+
+      left: calc(var(--ax) * 1%);
+      top:  calc(var(--ay) * 1%);
+      width: calc(var(--aw) * 1%);
+      aspect-ratio: var(--ar);
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      pointer-events: none;
+      transition: transform 0.25s ease;
+      filter: drop-shadow(0 8px 10px rgba(0,0,0,1));
+    }
+
+    /* Shake feedback when clicking a locked island */
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-4px); }
+      50% { transform: translateX(4px); }
+      75% { transform: translateX(-4px); }
+      100% { transform: translateX(0); }
+    }
+    .shake .island { animation: shake 0.3s linear; }
+
+    /* Tiny toast for locked message (optional) */
+    .toast {
+      position: fixed;
+      bottom: 3vh;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.75);
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      opacity: 0;
+      transition: opacity .2s ease;
+      pointer-events: none;
+    }
+    .toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+
+  <!-- Top navigation ribbon -->
+  <nav class="nav-ribbon" aria-label="Primary">
+    <a href="Character%20Selection.html">Characters</a>
+    <a href="main_page.html">Home page</a>
+    <a href="about.html">About</a>
+  </nav>
+
+  <!-- Logo (smaller) -->
+  <img src="css-styles/media/campaign-logo.png" alt="Proof by Magic Logo" class="logo">
+
+  <!-- Islands as separate clickable images -->
+  <div class="island-grid">
+    <a href="ConjuringCanyons.html" class="island-link" data-campaign="Basics" aria-disabled="false">
+      <img src="css-styles/media/conjuringcanyons2.png" alt="Basics Island" class="island">
+    </a>
+
+    <a href="PonensPastures.html" class="island-link" data-campaign="ModusPonens" aria-disabled="true">
+      <img src="css-styles/media/ponenspastures2.png" alt="Modus Ponens Island" class="island">
+    </a>
+  </div>
+
+  <button id="clearAllDataBtn">🧨 Clear ALL saved data</button>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+  // Deletes all localStorage for this origin, including:
+  // - pbm_user_id (player ID)
+  // - pbmCampaigns_v1:<userID> (per-user campaign completions)
+  // - pbm_steps_v1:<userID>:<campaignId> (inner-campaign step progress)
+  // - pbmProgress (legacy)
+  // - chosenCharacter, tutorial flags, and anything else your app saved
+  (function attachClearAllDataButton() {
+    const btn = document.getElementById('clearAllDataBtn');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      const sure = confirm(
+        "This will delete your player ID, completed campaigns, in-level progress, " +
+        "character selection, and ALL other saved settings for this site. Continue?"
+      );
+      if (!sure) return;
+
+      try {
+        localStorage.clear();
+        alert("All saved data has been cleared. The page will reload.");
+      } catch (err) {
+        alert("Couldn't clear saved data: " + (err?.message || err));
+      }
+      location.reload();
+    });
+  })();
+</script>
+
+
+<script>
+  /* === Campaign locking (inline, map page only) ======================= */
+
+  // Per-user campaign-completion store
+  const USER_ID = (localStorage.getItem('pbm_user_id') || 'Guest').toString();
+  const CAMPAIGN_STORE_KEY = `pbmCampaigns_v1:${encodeURIComponent(USER_ID)}`;
+
+  // Campaign prerequisites (MUST match your internal completion IDs)
+  // left side uses display IDs (= data-campaign)
+  // right side lists internal IDs that must be completed in the store
+  const PREREQS = {
+    Basics: [],
+    ModusPonens: ['ConjuringCanyons'],
+    Negations: ['PonensPastures'],
+    Quantifiers: ['FallacyValley'],
+  };
+
+  function loadCampaignProgress() {
+    try { return JSON.parse(localStorage.getItem(CAMPAIGN_STORE_KEY)) || {}; }
+    catch { return {}; }
+  }
+
+  function isUnlocked(displayId, progress) {
+    const reqs = PREREQS[displayId] || [];
+    return reqs.every(r => !!progress[r]);
+  }
+
+  function showToast(msg) {
+    const el = document.getElementById('toast');
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 1500);
+  }
+
+  // Helper: derive the internal completion key from the link's href
+  // e.g. "ConjuringCanyons.html" → "ConjuringCanyons"
+  function getCompletionKeyForLink(link) {
+    const href = link.getAttribute('href') || '';
+    const file = href.split('/').pop() || '';
+    return file.replace(/\.[^.]+$/, ''); // strip extension
+  }
+
+  function initMapLocks() {
+    const progress = loadCampaignProgress();
+
+    document.querySelectorAll('.island-link').forEach(link => {
+      const displayId = link.dataset.campaign;
+      const unlocked  = displayId === 'Basics' ? true : isUnlocked(displayId, progress);
+
+      // Apply state
+      link.setAttribute('aria-disabled', unlocked ? 'false' : 'true');
+      const badge = link.querySelector('.lock-badge');
+      if (badge) badge.style.display = unlocked ? 'none' : 'block';
+
+      // Intercept clicks if locked
+      link.addEventListener('click', (e) => {
+        if (link.getAttribute('aria-disabled') === 'true') {
+          e.preventDefault();
+          link.classList.add('shake');
+          setTimeout(() => link.classList.remove('shake'), 300);
+          const missing = (PREREQS[displayId] || []).find(req => !progress[req]);
+          showToast(missing ? `Locked — complete ${missing} first.` : 'Locked.');
+        }
+      });
+
+      // Keyboard accessibility
+      link.addEventListener('keydown', (e) => {
+        if ((e.key === 'Enter' || e.key === ' ') && link.getAttribute('aria-disabled') === 'true') {
+          e.preventDefault();
+          link.classList.add('shake');
+          setTimeout(() => link.classList.remove('shake'), 300);
+          const missing = (PREREQS[displayId] || []).find(req => !progress[req]);
+          showToast(missing ? `Locked — complete ${missing} first.` : 'Locked.');
+        }
+      });
+    });
+  }
+
+  /* === Avatar overlay logic ========================================== */
+  const AVATAR_BY_ROLE = {
+    'Logician': 'css-styles/media/gorit-avatar(cuter).png',
+    'Illusionist': 'css-styles/media/adarassa-avatar3.png',
+    'Elementalist': 'css-styles/media/nyaya-avatar.png',
+    'Sage': 'css-styles/media/zera-avatar.png'
+  };
+
+  const PET_BY_ROLE = {
+  'Logician': 'css-styles/media/gorit-pet.png',
+  'Illusionist': 'css-styles/media/adarassa-pet.png',
+  'Elementalist': 'css-styles/media/nyaya-pet.png',
+  'Sage': 'css-styles/media/zera-pet.png'
+};
+
+  const AVATAR_POS_OVERRIDES = {
+    Basics:       { ax: 75, ay: 27, aw: 30, ar: '1 / 1.5' },
+    Negations:    { ax: 60, ay: 43, aw: 30, ar: '1 / 1.5' },
+    ModusPonens:  { ax: 40, ay: 45, aw: 30, ar: '1 / 1.5' },
+    Quantifiers:  { ax: 16, ay: 82, aw: 25, ar: '1 / 1.5' },
+  };
+
+  function placeAvatarOnIslands() {
+    const role = localStorage.getItem('chosenCharacter');
+    const src  = AVATAR_BY_ROLE?.[role];
+    const pet  = PET_BY_ROLE?.[role];
+    if (!src) return;
+
+    const progress = loadCampaignProgress();
+    const links = Array.from(document.querySelectorAll('.island-link'));
+    if (!links.length) return;
+
+    // Build list of islands with derived completion keys and states
+    const islands = links.map(link => {
+      const displayId = link.dataset.campaign;           // e.g. "Basics"
+      const completionKey = getCompletionKeyForLink(link); // e.g. "ConjuringCanyons"
+      const done = !!progress[completionKey];            // completed?
+      const unlocked = displayId === 'Basics' ? true : isUnlocked(displayId, progress);
+      return { link, displayId, completionKey, unlocked, done };
+    });
+
+    // Most recently unlocked = the last island (by DOM order) that is unlocked AND not done
+    const unlockedNotDone = islands.filter(i => i.unlocked && !i.done);
+    const target = unlockedNotDone.length ? unlockedNotDone[unlockedNotDone.length - 1] : null;
+
+    // If none are unlocked-not-done, remove any avatars and bail
+    if (!target) {
+      document.querySelectorAll('.island-avatar').forEach(el => el.remove());
+      return;
+    }
+
+    // Clean up any existing avatars so only the current island shows it
+    document.querySelectorAll('.island-avatar').forEach(el => el.remove());
+
+    const currentLink = target.link;
+    const campaignId  = target.displayId;
+
+    // Pull per-island placement override
+    const ov = AVATAR_POS_OVERRIDES[campaignId] || {};
+    const ax = ov.ax ?? currentLink.dataset.ax ?? 12;
+    const ay = ov.ay ?? currentLink.dataset.ay ?? 82;
+    const aw = ov.aw ?? currentLink.dataset.aw;
+    const ar = ov.ar ?? currentLink.dataset.ar;
+
+    const img = new Image();
+    img.src = src;
+    img.alt = role || 'Chosen character';
+    img.className = 'island-avatar';
+    img.decoding = 'async';
+    img.loading  = 'eager';
+
+    img.style.setProperty('--ax', ax);
+    img.style.setProperty('--ay', ay);
+    if (aw != null) img.style.setProperty('--aw', aw);
+    if (ar != null) img.style.setProperty('--ar', ar);
+
+    currentLink.appendChild(img);
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    initMapLocks();
+    placeAvatarOnIslands();
+  });
+</script>
+
+
+</body>
+</html>

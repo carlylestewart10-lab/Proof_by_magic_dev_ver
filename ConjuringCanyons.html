@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Proof by Magic</title>
+<link rel="stylesheet" href="css-styles/play_styles.css">
+<link rel="stylesheet" href="css-styles/buttons.css">
+<link rel="stylesheet" href="css-styles/potion_bottle.css">
+</head>
+<body>
+  <div class="container">
+    <div class="target-label" id="target">Target: P
+      </div>
+    <div class="left-half">
+      <div class="left-content" id="parchment">
+
+       <div id="potion_bottle" class="pbm-potion" data-capacity="5">
+         <div class="bottle_top"><span class="highlight"></span></div>
+         <div class="bottle_main">
+           <span class="highlight"></span>
+           <div class="bottle_inner">
+             <div class="liquid"></div>
+             <div class="bubble"></div>
+             <div class="bubble delay-1"></div>
+             <div class="bubble delay-2"></div>
+           </div>
+         </div>
+       </div>
+
+        <img src="css-styles/media/image2.png" alt="Image 2" id="backgroundim"/>
+        <div id="proof" class="proof-layer"></div>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="right-half" id="controls">
+      <div class="right-content">
+        <div class="row assume">
+          <input style="max-width:100%;,border-radius:1vh;" id="assumeText" type="text" placeholder="Assume: e.g., P" />
+          <button class="button-85" id="assumeBtn">Assume</button>
+        </div>
+        <div class="row assert">
+          <input style="max-width:100%;,border-radius:1vh;" id="assertText" type="text" placeholder="Conjure: P,Q,R or S" />
+          <button class="button-85" id="assertBtn">Conjure</button>
+        </div>
+        <div class="row grid2">
+          <button class="button-85-intro" id="andBtn">∧</button>
+          <button class="button-85-intro" id="impBtn">→</button>
+        </div>
+        <div class="row grid2">
+          <button class="button-85" id="restateBtn">Restate</button>
+          <button class="button-85" id="checkBtn">Check</button>
+        </div>
+        <button class="button-85" id="deleteBtn">Delete last line</button>
+        <div id="status" class="status">Ready.</div>
+        <button class="button-85" id="nextBtn">Next Problem >></button>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- Tutorial overlay elements (siblings of .container) -->
+<div id="tutorialBackdrop" aria-hidden="true"></div>
+<div id="tutorialSpotlight" aria-hidden="true"></div>
+<div id="tutorialMessage" role="dialog" aria-live="polite"></div>
+
+<!-- SVG defs for blurred spotlight mask -->
+<svg id="pbm-mask-defs" width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+  <defs>
+    <filter id="pbm-spot-blur" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="16" />
+    </filter>
+    <mask id="pbm-spot-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%">
+      <rect x="0" y="0" width="100%" height="100%" fill="white"/>
+      <g filter="url(#pbm-spot-blur)">
+        <rect id="pbm-spot-hole" x="0" y="0" width="0" height="0" rx="14" ry="14" fill="black"/>
+      </g>
+    </mask>
+  </defs>
+</svg>
+
+
+
+  <script>
+  // Who’s playing. You can set this elsewhere too.
+  window.userID = window.userID || "Guest";
+
+  // Identify this campaign (used in storage keys).
+  window.PBM_CAMPAIGN_ID = "ConjuringCanyons";
+
+  // Declare the step list for THIS page.
+  // Two kinds:
+  //   { type: 'info',   id?, mode: 'modal'|'spotlight', html?, image?, steps? }
+  //   { type: 'gameplay', id?, target: 'Target: ...' }
+
+  window.PBM_STEPS = [
+    // ---- Tutorial: spotlight sequence (replaces your inline script) ----
+    {
+      type: 'info',
+      id: 'welcome',
+      mode: 'spotlight',
+      steps: [
+
+        {
+          welcome: true,
+          message:
+            "<b>Welcome to Conjuring Canyons</b><br/>" +
+            "This is where you will learn the basics of casting spells."
+        },
+        { sel: "#parchment",
+          message:
+            "<b>Parchment</b><br/>" +
+            "A spell is cast by writing it on the piece of parchment."
+        },
+        {
+          sel: "#target", pad: 12,
+          message:
+            "<b>Target</b><br/>This shows the spell you need to cast to advance to the next level"
+        },
+        {
+          sel: ".row.assert", pad: 10,
+          message:
+            "<b>Conjure</b><br/>This is the most basic spell, called conjuring. Try it out!"
+        }
+      ]
+    },
+    { type: 'gameplay', id: 'lvl1', target: "Target: P" },
+    {
+      type: 'info',
+      id: 'teach implication',
+      mode: 'spotlight',
+      steps: [
+      {
+          sel: "#potion_bottle", pad: 12,
+          message:
+            "This is your potion bottle, to reach the target, your potion bottle must be full!"
+        },
+        {
+          sel: ".row.assume", pad: 12,
+          message:
+            "<b>Assume</b><br/>The assume spell lets you write anything you want" +
+            " but it also drains your potion bottle."
+        },
+        {
+          sel: "#impBtn", pad: 10,
+          message:
+            "<b>→</b><br/>This spell is called implication. It refills your potion bottle. "
+        }
+      ]
+    },
+    { type: 'gameplay', id: 'lvl2', target: "Target: P → Q" },
+    {
+      type: 'info',
+      id: 'teach and',
+      mode: 'spotlight',
+      steps: [
+        {
+          sel: "#andBtn", pad: 10,
+          message:
+            "This spell is called Conjunction. Select two lines and use this to combine them with ∧."
+        }
+      ]
+    },
+    { type: 'gameplay', id: 'lvl3', target: "Target: P ∧ Q" },
+    {
+      type: 'info',
+      id: 'teach implication',
+      mode: 'spotlight',
+      steps: [
+        {
+          sel: ".row.assume", pad: 12,
+          message:
+            "<b>Hint:</b><br/>You can type 'and' or '&' in here instead of ∧."
+        }
+      ]
+    },
+    { type: 'gameplay', id: 'lvl4', target: "Target: ( P ∧ Q ) → R" },
+
+    // ---- An extra info step between the penultimate and final level ----
+    {
+      type: 'info',
+      id: 'final-gate',
+      mode: 'modal',
+      html:
+        "<b>The Final Trial</b><br/>" +
+        "After mastering the basics, you find an egg in an abandoned nest. " +
+        "Cast the spell to unlock it",
+      image: "css-styles/media/final_level2.png"
+    },
+
+    // ---- Final level ----
+    { type: 'gameplay', id: 'final', target: "Target: A → ( P → A )" },
+
+    {
+  type: 'info',
+  id: 'hatching',
+  mode: 'modal',
+  html:
+    "<b>The Hatchling</b><br/>" +
+    "A magical creature! What will you name it?" +
+    "<div id='pbmPetNameUI' style='margin-top:1em;display:flex;gap:.5em;align-items:center;flex-wrap:wrap;width:100%'>" +
+      "<input id='pbmPetName' placeholder='Name your hatchling…' maxlength='24' " +
+             "style='flex:1 1 0%;min-width:0;padding:.5em .7em;border-radius:.5em;border:1px solid rgba(255,255,255,.25);background:rgba(0,0,0,.25);color:#fff;'>" +
+      "<button id='pbmPetNameBtn' type='button' " +
+              "style='flex:0 0 auto;padding:.5em .9em;border-radius:.6em;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.08);color:#fff;'>Name</button>" +
+      "<span id='pbmPetNameStatus' aria-live='polite' style='opacity:.8;flex:1 0 100%'></span>" +
+    "</div>",
+  image: "css-styles/media/adarassa_hatchling.png"
+}
+  ];
+</script>
+
+<script src="modules/tooltips.js"></script>
+<script src="modules/character_placement.js"></script>
+<script type="module" src="modules/progress_tester.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Proof by Magic</title>
+<link rel="stylesheet" href="css-styles/play_styles.css">
+<link rel="stylesheet" href="css-styles/buttons.css">
+<link rel="stylesheet" href="css-styles/potion_bottle.css">
+<style>
+
+  body::before {
+    background-image: url('css-styles/media/ponensbackground.png');
+  }
+
+  .target-label {
+    color: #61c71e;
+    text-shadow:
+      0 0 1px #4b9c16,
+      0 0 1px #4b9c16,
+      0 0 1px #4b9c16,
+      0 0 2px #4b9c16,
+      0 0 3px #4b9c16;
+  }
+
+.button-85-intro:before {
+    background: linear-gradient(
+    45deg,
+    #9efc05,
+    #cdff05,
+    #09ff00,
+    #1aff05,
+    #05ff50,
+    #1aff05,
+    #09ff00,
+    #cdff05,
+    #9efc05
+    );
+    background-size: 400%;
+}
+
+.button-85:before {
+    background: linear-gradient(
+    45deg,
+    #9efc05,
+    #cdff05,
+    #09ff00,
+    #1aff05,
+    #05ff50,
+    #1aff05,
+    #09ff00,
+    #cdff05,
+    #9efc05
+    );
+    background-size: 400%;
+}
+
+  .pbm-elim-mode .button-85-intro {
+  background: #57FFF4;
+  color: black;
+  font-weight: 600;
+  box-shadow: none;
+  filter: blur(0.7px);
+  -webkit-filter: blur(0.7px);
+  opacity: 1;
+}
+
+  .pbm-elim-mode .button-85-intro:before {
+    background: #57FFF4;
+}
+
+</style>
+
+</head>
+<body>
+  <div class="container">
+    <div class="target-label" id="target">Target: ( P ∧ A ) → A
+      </div>
+    <div class="left-half">
+      <div class="left-content" id="parchment">
+
+        <div id="potion_bottle" class="pbm-potion" data-capacity="5">
+         <div class="bottle_top"><span class="highlight"></span></div>
+         <div class="bottle_main">
+           <span class="highlight"></span>
+           <div class="bottle_inner">
+             <div class="liquid"></div>
+             <div class="bubble"></div>
+             <div class="bubble delay-1"></div>
+             <div class="bubble delay-2"></div>
+           </div>
+         </div>
+       </div>
+
+        <img src="css-styles/media/image2.png" alt="Image 2" id="backgroundim"/>
+        <div id="proof" class="proof-layer"></div>
+      </div>
+    </div>
+    <div class="right-half" id="controls">
+      <div class="right-content">
+        <div class="row assume">
+          <input style="max-width:100%;,border-radius:1vh;" id="assumeText" type="text" placeholder="Assume: e.g., P" />
+          <button class="button-85" id="assumeBtn">Assume</button>
+        </div>
+        <div class="row assert">
+          <input style="max-width:100%;,border-radius:1vh;" id="assertText" type="text" placeholder="Conjure: P,Q,R or S" />
+          <button class="button-85" id="assertBtn">Conjure</button>
+        </div>
+        <div class="row grid2">
+          <button class="button-85-intro" id="andBtn">∧</button>
+          <button class="button-85-intro" id="impBtn">🠆</button>
+        </div>
+        <div class="row grid2">
+          <button class="button-85" id="restateBtn">Restate</button>
+          <button class="button-85" id="checkBtn">Check</button>
+        </div>
+        <button class="button-85" id="deleteBtn">Delete last line</button>
+        <div id="status" class="status">Ready.</div>
+        <button class="button-85" id="nextBtn">Next Problem >></button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Tutorial overlay elements (siblings of .container) -->
+<div id="tutorialBackdrop" aria-hidden="true"></div>
+<div id="tutorialSpotlight" aria-hidden="true"></div>
+<div id="tutorialMessage" role="dialog" aria-live="polite"></div>
+
+<!-- SVG defs for blurred spotlight mask -->
+<svg id="pbm-mask-defs" width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+  <defs>
+    <filter id="pbm-spot-blur" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="16" />
+    </filter>
+    <mask id="pbm-spot-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%">
+      <rect x="0" y="0" width="100%" height="100%" fill="white"/>
+      <g filter="url(#pbm-spot-blur)">
+        <rect id="pbm-spot-hole" x="0" y="0" width="0" height="0" rx="14" ry="14" fill="black"/>
+      </g>
+    </mask>
+  </defs>
+</svg>
+
+
+
+<script>
+window.userID = window.userID || "Guest";
+
+// Identify this campaign (used in storage keys).
+window.PBM_CAMPAIGN_ID = "PonensPastures";
+
+window.PBM_STEPS = [
+  // ---- Tutorial: spotlight sequence (replaces your inline script) ----
+  {
+    type: 'info',
+    id: 'welcome',
+    mode: 'spotlight',
+    steps: [
+
+      {
+        welcome: true,
+        message:
+          "<b>Welcome to Ponens Pastures</b><br/>" +
+          "Here you will learn how to utilise the magical abilities of your new friend."
+      },
+      {
+        sel: ".parchment-pet", pad: 10,
+        message:
+          "Click on your pet to activate its magical powers."
+      },
+      {
+        sel: "#andBtn", pad: 10,
+        message:
+          "When your pet is active, the ∧ button will have a new purpose: to decompose X ∧ Y into separate lines containing X and Y."
+      },
+      {
+        sel: "#impBtn", pad: 10,
+        message:
+          "Similarly, if your pet is active, this button will eliminate 🠆"
+      }
+    ]
+  },
+
+  // ---- Gameplay steps (targets) ----
+  { type: 'gameplay', target: "Target: ( P ∧ A ) → A" },
+  { type: 'gameplay', target: "Target: ( A ∧ B ) → ( Q ∧ B )" },
+  { type: 'gameplay', target: "Target: ( A ∧ B ) → A" },
+
+  {
+    type: 'info',
+    mode: 'spotlight',
+    steps: [
+      {
+        sel: "#impBtn", pad: 10,
+        message:
+          "<b>Hint:</b><br/>" +
+          "If your pet is active, this button will eliminate 🠆"
+      }
+    ]
+  },
+
+  { type: 'gameplay', target: "Target: ( P → B ) → B" },
+  { type: 'gameplay', target: "Target: ( A ∧ B ) → ( B ∧ A )" },
+  { type: 'gameplay', target: "Target: ( P → A ) → ( B → A )" },
+  { type: 'gameplay', target: "Target: ( A ∧ S ) → A" },
+  { type: 'gameplay', target: "Target: ( ( P → A ) ∧ B ) → ( A ∧ B )" },
+  { type: 'gameplay', target: "Target: ( P → ( A ∧ B ) ) → ( R → ( B ∧ A ) )" },
+
+
+
+      // ---- An extra info step between the penultimate and final level ----
+  {
+    type: 'info',
+    id: 'hooded-figure',
+    mode: 'modal',
+    html:
+      "During a casual stroll, you encounter a hooded figure on the path"
+  },
+  {
+    type: 'info',
+    id: 'dialogue',
+    mode: 'modal',
+    html:
+      "During a casual stroll, you encounter a hooded figure on the path:<br/><br/>" +
+      "I have been watching you. You are a powerful sorcerer. " +
+      "But I don't think you can cast this spell! If you succeed, I might have a reward for you...",
+    image: "css-styles/media/hooded_figure.png"
+  },
+
+  // ---- Final level ----
+  { type: 'gameplay', id: 'final', target: "Target: P" },
+
+  {
+    type: 'info',
+    id: 'amulet',
+    mode: 'modal',
+    html:
+      "Your gift",
+    image: "css-styles/media/fallacy_amulet3.png"
+  }
+];
+</script>
+
+
+<script src="modules/tooltips.js"></script>
+<script src="modules/character_placement.js"></script>
+<script type="module" src="modules/progress_tester.js"></script>
+
+</body>
+</html>

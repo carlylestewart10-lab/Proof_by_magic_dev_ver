@@ -1,0 +1,378 @@
+
+
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden;
+
+    position: relative;
+    z-index: 0;
+}
+
+body::before {
+    content: "";
+    position: fixed;   /* stays fixed when scrolling */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('media/conjuringcanyonsbackground2.png');
+    background-size: cover;
+    background-position: center;
+    filter: blur(1px);
+    -webkit-filter: blur(1px);
+    z-index: -1; /* sit behind content */
+}
+
+
+.neon-assert {
+    color: #aee7ff;
+    text-shadow:
+        0 0 7px #aee7ff,
+        0 0 10px #aee7ff,
+        0 0 21px #aee7ff,
+        0 0 42px #1ecbff,
+        0 0 82px #1ecbff,
+        0 0 92px #0ff,
+        0 0 102px #0ff,
+        0 0 151px #0ff;
+}
+
+.custom-tooltip {
+    position: absolute;
+    background: rgba(0,0,0,0.85);
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.9em;
+    display: none;
+    pointer-events: none;
+    max-width: 200px;
+    z-index: 1000;
+}
+
+.container {
+    display: flex;       /* take up most of the width */
+    flex-wrap: wrap;
+    max-width: 1200px;        /* don’t get too wide */
+    min-height: 80vh;         /* ensure tall enough to look centered */
+    background-size: 100% 100%;
+    padding: 0 2vw 2vw 2vw;
+    box-sizing: border-box;
+    margin-right: 7vw;
+    border-radius: 1rem;      /* optional: soften edges */
+}
+
+.logo {
+    display: flex;
+    height: 30vw;
+    width: 30vw;
+    box-sizing: border-box;
+}
+
+
+.left-half {
+    position: relative;
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.left-content {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    box-shadow:
+      -10px -10px 20px 5px rgba(0,0,0,0.3),
+       10px 10px 20px 5px rgba(0,0,0,0.3);
+    border-radius:25px;
+}
+
+
+.left-content img {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    display: block;
+    box-shadow:
+      inset 0   20px 25px -15px rgba(0,0,0,0.3), /* top */
+      inset 20px 0   25px -15px rgba(0,0,0,0.5), /* right */
+      inset 0  -20px 25px -5px rgba(0,0,0,0.3), /* bottom */
+      inset -20px 0  25px -5px rgba(0,0,0,0.3); /* left */
+}
+
+.target-label {
+    position: relative;
+    flex: 0 0 100%;
+    text-align: center;
+    padding: 4vh 2vw;
+    font-size: 5vh;
+    font-weight: bold;
+    color: #ffb433;
+    text-shadow:
+      0 0 0.5px #ffb433,
+      0 0 0.5px #ffb433,
+      0 0 1px #ffb433,
+      0 0 2px #ffb433,
+      0 0 3px #ffb433;
+     filter: drop-shadow(0 6px 8px rgba(0,0,0,1));
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* prevents overflow */
+    font-family: 'Merienda', cursive;
+}
+
+.proof-layer {
+    position: absolute;
+    inset: 0;
+    padding: 3vh 3vw;
+    overflow-y: auto;
+    overflow-x: hidden; /* disable sideways scroll */
+    box-sizing: border-box;
+    font-size: 4vh;
+    color:
+    #070729;
+    text-shadow:
+    0 0 0.1vh #1a3b6f,
+    0 0 0.2vh #1a3b6f,
+    0 0 0.1vh #1a3b6f,
+    0 0 0.1vh #264a8f,
+    0 0 0.1vh #264a8f,
+    0 0 0.1vh #1e3d7a,
+    0 0 0.1vh #1e3d7a,
+    0 0 0.07vh #1a3566;
+}
+
+.proof-line {
+    white-space: pre-wrap;
+    cursor: pointer;
+    border-radius: 4px;
+    font-family: 'Merienda',cursive;
+
+  }
+
+.proof-line.selected {
+    background: rgba(0,0,0,0.18);
+}
+
+  /* Right (controls) */
+.right-half {
+    position: relative;
+    flex: 2;
+    top: 12vh;
+    display: flex;
+    flex-direction: column;
+    min-width: 0; /* <-- important */
+    padding: 0 0;
+    box-sizing: border-box;
+}
+
+.right-content {
+    flex: 1;
+    padding: 10vh 1vw;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-rows: auto auto auto auto auto;
+    gap: 2vh 2vh;
+    align-content: start;
+    max-width: 100%; /* keep inside viewport */
+}
+
+.row {
+    display: grid;
+    max-width: 100%;
+    gap: 2vh;
+}
+
+
+.row.assume, .row.assert {
+    grid-template-columns: 1fr auto;
+}
+
+
+.row.grid2 {
+    grid-template-columns: 1fr 1fr;
+    }
+
+
+input[type="text"] {
+    padding: 1.5vh 2vh;
+    border-radius: 8px;
+    border: 1px solid #bbb;
+    font-size: 2vh;
+    box-sizing: border-box;
+    max-width: 100%; /* keep inside */
+}
+
+
+
+
+.status {
+    font-size: 0.95rem;
+    color: #111;
+    background: rgba(255,255,255,0.85);
+    border-radius: 8px;
+    padding: 2vh 2vw;
+    word-wrap: break-word;
+    font-size: 2vh;
+    }
+    .status.ok { border-left: 4px solid #2ecc71; }
+    .status.warn { border-left: 4px solid #f39c12; }
+    .status.err { border-left: 4px solid #e74c3c; }
+
+/* ===== Tutorial overlay ===== */
+#tutorialBackdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.78);
+    z-index: 9998;
+    display: none;
+}
+
+#tutorialSpotlight {
+    position: fixed;
+    z-index: 9999;
+    display: none;
+    pointer-events: none;         /* let clicks go "through" to the backdrop */
+    border-radius: 12px;
+    border: none;
+    /* Outer overlay + progressively lighter inset feathers */
+    box-shadow:
+    0 0 0 9999px rgba(0,0,0,0.72),            /* outer dark overlay */
+    inset 0 0 1vh 0.7vh rgba(0,0,0,0.64),     /* darker innermost feather */
+    inset 0 0 1vh 0.5vh rgba(0,0,0,0.20),     /* mid feather */
+    inset 0 0 3vh 2.5vh rgba(0,0,0,0.13);     /* softer feather */
+    transition: top .18s ease, left .18s ease, width .18s ease, height .18s ease;
+}
+
+
+#tutorialMessage {
+    position: fixed;
+    z-index: 10000;
+    display: none;
+    max-width: min(520px, 92vw);
+
+    /* light yellow text + informal sans-serif */
+    color: #ffe8a3;
+    font-family: "Nunito", "Quicksand", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+
+    /* greyish background instead of black */
+    background: rgba(58, 60, 66, 0.92);
+
+    padding: 14px 16px;
+    border-radius: 12px;
+    line-height: 1.4;
+
+    /* slightly larger text */
+    font-size: 2.2vh;
+
+    box-shadow: 0 8px 28px rgba(0,0,0,0.35);
+}
+
+
+.custom-tooltip{
+    position:absolute;
+    display:none;
+    max-width: 280px;
+    padding:8px 10px;
+    background: rgba(0,0,0,0.85);
+    color: #ECEBFA;
+    font-family: "Nunito", "Quicksand", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+
+    z-index:10000;
+    pointer-events:none; /* don't steal hover */
+    box-shadow:0 6px 18px rgba(0,0,0,.3);
+}
+
+
+.custom-tooltip::after{
+    content:"";
+    position:absolute;
+    left:14px;
+    top:-6px; /* arrow above the box */
+    border:6px solid transparent;
+    border-bottom-color: rgba(0,0,0,0.85);
+}
+
+
+
+/* Avatar on the parchment (top-right corner) */
+.parchment-avatar {
+    position: absolute;
+    left: 19vh;   /* X% across right-half */
+    top: -3vh;   /* Y% down right-half */
+    width: 17vh;  /* width % of right-half */
+    aspect-ratio: var(--ar, 1 / 1.5);
+    transform: translate(-50%, -50%); /* center around anchor */
+    transform-origin: 50% 100%;
+    animation: parchment-bob 3.8s ease-in-out infinite;
+    will-change: transform;
+    z-index: 3;
+    filter: drop-shadow(0 6px 8px rgba(0,0,0,1));
+    pointer-events: none;
+}
+
+.parchment-pet {
+    position: absolute;
+    left: 23vh;   /* X% across right-half */
+    top: 0vh;   /* Y% down right-half */
+    width: 9vh;  /* width % of right-half */
+    aspect-ratio: var(--ar, 1 / 1.1);
+    will-change: transform;
+    z-index: 3;
+    filter: drop-shadow(0 6px 8px rgba(0,0,0,1));
+    cursor: pointer;
+    transition: filter 0.2s ease, transform 0.1s ease;
+}
+
+.pbm-elim-mode .parchment-pet{
+  filter: drop-shadow(0 0 4px #fff) drop-shadow(0 0 12px #57FFF4);
+  transform: translateY(-1px);
+}
+
+#tutorialBackdrop.pbm-smoke{
+    background:
+    radial-gradient(1200px 800px at 20% 30%, rgba(255,255,255,0.05), rgba(0,0,0,0.3) 60%),
+    radial-gradient(1000px 700px at 80% 50%, rgba(255,255,255,0.03), rgba(0,0,0,0.3) 55%),
+    rgba(0,0,0,0.82);
+    backdrop-filter: blur(2px);
+    display: block !important;
+    animation: pbmSmokeDrift 16s ease-in-out infinite alternate;
+    }
+    @keyframes pbmSmokeDrift {
+    0%   { background-position: 0% 0%, 100% 0%; }
+    100% { background-position: 100% 100%, 0% 100%; }
+    }
+    #tutorialMessage .pbm-gate-img { margin-top: 1rem; text-align: center; }
+    #tutorialMessage .pbm-gate-img img {
+    max-width: min(60vw, 520px); height: auto;
+    border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,.5);
+}
+
+
+/* Make the parchment a positioning context */
+#parchment {
+  position: relative;
+}
+
+/* Put the bottle in the parchment's top-right corner */
+#parchment .pbm-potion {
+  position: absolute;      /* override the fixed positioning */
+  top: 2vh;
+  right: 2vh;
+  z-index: 5;              /* above parchment image & proof lines */
+  pointer-events: none;    /* never block clicks on the proof */
+}
+
+/* (Optional) fine-tune bottle size here for this page */
+#parchment .pbm-potion {
+  width: 7vh;             /* or whatever looks right on your image */
+  height: 9vh;
+}

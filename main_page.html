@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Proof by Magic - Landing</title>
+  <style>
+    body {
+      background-image: url('css-styles/media/image1.png'); /* same as second page */
+      background-position: center;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: 'Merienda', cursive;
+    }
+
+    .button-85 {
+  padding: 0.6em 2em;
+  border: none;
+  outline: none;
+  color: rgb(255, 255, 255);
+  background: #111;
+  cursor: pointer;
+  position: relative;
+  z-index: 0;
+  border-radius: 10px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  font-size: 3vh;
+  box-shadow:
+    0 4px 0 #000,       /* bottom shadow for depth */
+    inset 0 2px 2px #333, /* top highlight */
+    inset 0 -2px 2px #000; /* bottom shadow */
+  width: 100%;
+  transition: transform 0.05s ease, background-color 0.2s ease;
+}
+
+.button-85:before {
+  content: "";
+  background: linear-gradient(
+    45deg,
+    #ff0000,
+    #ff7300,
+    #fffb00,
+    #48ff00,
+    #00ffd5,
+    #002bff,
+    #7a00ff,
+    #ff00c8,
+    #ff0000
+  );
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  background-size: 400%;
+  z-index: -1;
+  filter: blur(5px);
+  -webkit-filter: blur(5px);
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  border-radius: 10px;
+  opacity: 0.6; /* subtle resting glow */
+}
+
+/* Animate gradient only on hover */
+.button-85:hover:before {
+  animation: glowing-button-85 20s linear infinite;
+  opacity: 1;
+}
+
+@keyframes glowing-button-85 {
+  0% { background-position: 0 0; }
+  50% { background-position: 400% 0; }
+  100% { background-position: 0 0; }
+}
+
+.button-85:after {
+  z-index: -1;
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #222;
+  left: 0;
+  top: 0;
+  border-radius: 10px;
+}
+
+    /* Logo */
+    .logo {
+      position: relative;
+      width: 60vw;
+      max-width: 600px;
+      margin-bottom: 5vh;
+      left: -0.5vw;
+    }
+
+    /* Menu Grid */
+    .menu {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3vh 3vw;
+      width: 70vw;
+      max-width: 500px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Logo -->
+  <img src="css-styles/media/logo.png" alt="Proof by Magic Logo" class="logo">
+
+  <!-- Menu Buttons in 2x2 Grid -->
+  <div class="menu">
+    <button class="button-85" onclick="location.href='About.html'">About</button>
+    <button class="button-85" onclick="location.href='Character Selection.html'">Play</button>
+
+  </div>
+</body>
+</html>

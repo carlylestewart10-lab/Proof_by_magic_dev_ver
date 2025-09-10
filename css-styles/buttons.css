@@ -1,0 +1,145 @@
+.button-85 {
+    border: none;
+    outline: none;
+    color: #ECEBFA;
+    background: rgb(30, 30, 30);
+    cursor: pointer;
+    position: relative;
+    max-width: 100%; /* keep inside */
+    font-size: 2vh;
+    padding: 1vh 1vh;
+    border-radius: 10px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    font-size: 2vh;
+    font-family: "Nunito", "Quicksand", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+    box-shadow:
+    0 0.2vh 0 #000,       /* bottom shadow for depth */
+    inset 0 0.1vh 0.1vh #333, /* top highlight */
+    inset 0 -0.1vh 0.1vh #000; /* bottom shadow */
+    width: 100%;
+    transition: transform 0.05s ease, background-color 0.2s ease;
+}
+
+.button-85:before {
+    content: "";
+    background: linear-gradient(
+    45deg,
+    #fc2a00,
+    #fc6100,
+    #fc8200,
+    #fca800,
+    #fcd600,
+    #fca800,
+    #fc8200,
+    #fc6100,
+    #fc2a00
+    );
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    background-size: 400%;
+    z-index: -1;
+    filter: blur(2px);
+    -webkit-filter: blur(2px);
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    border-radius: 10px;
+    opacity: 0.6; /* subtle resting glow */
+
+}
+
+/* Animate gradient only on hover */
+.button-85:hover:before {
+    animation: glowing-button-85 20s linear infinite;
+    opacity: 1;
+    }
+
+    @keyframes glowing-button-85 {
+    0% { background-position: 0 0; }
+    50% { background-position: 400% 0; }
+    100% { background-position: 0 0; }
+}
+
+
+.button-85-intro {
+    border: none;
+    outline: none;
+    color: #ECEBFA;
+    background: rgb(30, 30, 30);
+    cursor: pointer;
+    position: relative;
+    max-width: 100%; /* keep inside */
+    font-size: 2.5vh;
+    padding: 0.63vh 1vh;
+    border-radius: 10px;
+    box-shadow:
+    0 0.2vh 0 #000,       /* bottom shadow for depth */
+    inset 0 0.1vh 0.1vh #333, /* top highlight */
+    inset 0 -0.1vh 0.1vh #000; /* bottom shadow */
+    width: 100%;
+    transition: transform 0.05s ease, background-color 0.2s ease;
+}
+
+.button-85-intro:before {
+    content: "";
+    background: linear-gradient(
+    45deg,
+    #fc2a00,
+    #fc6100,
+    #fc8200,
+    #fca800,
+    #fcd600,
+    #fca800,
+    #fc8200,
+    #fc6100,
+    #fc2a00
+    );
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    background-size: 400%;
+    z-index: -1;
+    filter: blur(2px);
+    -webkit-filter: blur(2px);
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    border-radius: 10px;
+    opacity: 0.6; /* subtle resting glow */
+
+}
+
+/* Animate gradient only on hover */
+.button-85-intro:hover:before {
+    animation: glowing-button-85 20s linear infinite;
+    opacity: 1;
+    }
+
+/* Disabled / inactive look shared by both styles */
+.button-85[disabled],
+.button-85-intro[disabled],
+.button-85.is-disabled,
+.button-85-intro.is-disabled {
+  opacity: 0.45;              /* slightly transparent */
+  cursor: default;
+}
+
+/* Kill the animated glow + make border glow faint when disabled */
+.button-85[disabled]::before,
+.button-85-intro[disabled]::before,
+.button-85.is-disabled::before,
+.button-85-intro.is-disabled::before {
+  animation: none !important;
+  opacity: 0.15;
+}
+
+/* Avoid press animation when disabled */
+.button-85[disabled]:active,
+.button-85-intro[disabled]:active,
+.button-85.is-disabled:active,
+.button-85-intro.is-disabled:active {
+  transform: none;
+}
+
+
