@@ -166,7 +166,7 @@
     { type: 'gameplay', id: 'lvl3', target: "Target: P ∧ Q" },
     {
       type: 'info',
-      id: 'teach implication',
+      id: 'assume and',
       mode: 'spotlight',
       steps: [
         {
@@ -177,6 +177,22 @@
       ]
     },
     { type: 'gameplay', id: 'lvl4', target: "Target: ( P ∧ Q ) → R" },
+    {
+      type: 'info',
+      id: 'assume implication',
+      mode: 'spotlight',
+      steps: [
+        {
+          sel: ".row.assume", pad: 12,
+          message:
+            "<b>Hint:</b><br/>You can type 'implies' or '->' in here instead of →."
+        }
+      ]
+    },
+    { type: 'gameplay', id: 'lvl5', target: "Target: ( P → ( Q → R )" },
+    { type: 'gameplay', id: 'lvl6', target: "Target: ( P ∧ Q ) → ( R ∧ S )" },
+    { type: 'gameplay', id: 'lvl7', target: "Target: ( P → Q ) → ( R → S )" },
+    { type: 'gameplay', id: 'lvl8', target: "Target: ( P → ( ( S ∧ Q ) → R ) ∧ P" },
 
     // ---- An extra info step between the penultimate and final level ----
     {
@@ -207,7 +223,7 @@
               "style='flex:0 0 auto;padding:.5em .9em;border-radius:.6em;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.08);color:#fff;'>Name</button>" +
       "<span id='pbmPetNameStatus' aria-live='polite' style='opacity:.8;flex:1 0 100%'></span>" +
     "</div>",
-  image: "css-styles/media/adarassa_hatchling.png"
+  image: "css-styles/media/gorit_hatchling.png"
 }
   ];
 </script>
